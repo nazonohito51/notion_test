@@ -1,5 +1,5 @@
 import { Client } from '@notionhq/client'
-import { getAllNotes } from './markdown.js'
+import { convertMarkdownsToNotionPages } from './markdown.js'
 
 const token = 'ntn_ih576653902a4WljVYEDG8sWLedOTiCQhxNhT1mCSUQepV'
 const databaseId = '1860225f0a4e802097d0f9fdc63826ae'
@@ -7,7 +7,7 @@ const databaseId = '1860225f0a4e802097d0f9fdc63826ae'
 async function main() {
     const notion = new Client({ auth: token })
 
-    const notes = getAllNotes('../doc')
+    const notionPages = convertMarkdownsToNotionPages('../doc')
     const failedNotes = []
 
     // 1. データベース内の全ページを取得
@@ -18,14 +18,14 @@ async function main() {
     console.log(`Found ${response.results.length} pages.`)
 
     // 2. データベースを空へ（各ページを削除）
-    for (const page of response.results) {
-        const pageId = page.id
+    for (const oldNotionPage of response.results) {
+        const pageId = oldNotionPage.id
         await notion.blocks.delete({ block_id: pageId })
         console.log(`Deleted page: ${pageId}`)
     }
 
     // 3. ページをアップロード
-    for (const note of notes) {
+    for (const notionPage of notionPages) {
         try {
             await notion.pages.create({
                 parent: {
@@ -34,14 +34,14 @@ async function main() {
                 properties: { // 更新対象のデータベースのカラムに合わせて変更
                     Name: {
                         type: 'title',
-                        title: [{ text: { content: note.name } }],
+                        title: [{ text: { content: notionPage.name } }],
                     },
                 },
-                children: note.body,
+                children: notionPage.body,
             })
         } catch (e) {
-            console.error(`${note.name}の追加に失敗: `, e)
-            failedNotes.push(note.name)
+            console.error(`${notionPage.name}の追加に失敗: `, e)
+            failedNotes.push(notionPage.name)
         }
     }
 
