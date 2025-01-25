@@ -7,7 +7,7 @@ const databaseId = '1860225f0a4e802097d0f9fdc63826ae'
 async function main() {
     const notion = new Client({ auth: token })
 
-    const notionPages = convertMarkdownsToNotionPages('../doc')
+    const notionPages = convertMarkdownsToNotionPages('doc')
     const failedNotes = []
 
     // 1. データベース内の全ページを取得
