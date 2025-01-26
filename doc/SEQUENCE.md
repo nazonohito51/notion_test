@@ -1,3 +1,8 @@
+---
+title: テスト
+tags: ["hoge", "fuga"]
+---
+
 ```mermaid
 sequenceDiagram
     participant 太郎
