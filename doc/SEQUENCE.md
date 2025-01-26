@@ -1,6 +1,7 @@
 ---
-title: テスト
-tags: ["hoge", "fuga"]
+syncToNotion: true
+name: 'TEST'
+tags: ['Checkout', 'Sequence']
 ---
 
 ```mermaid

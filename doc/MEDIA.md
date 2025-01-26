@@ -1,3 +1,9 @@
+---
+syncToNotion: true
+name: 'MEDIA'
+tags: ['Checkout', 'Sequence']
+---
+
 # メディア
 ## 画像1
 ![image1](MEDIA/face_smile_man1.png)

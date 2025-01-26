@@ -23,16 +23,22 @@ function getAllMarkdownRecursive(dirPath, markdownFiles = []) {
 
 export function convertMarkdownsToNotionPages(docDir) {
     const filePaths = getAllMarkdownRecursive(docDir)
+    const notionPages = [];
 
-    return filePaths.map(filePath => {
+    filePaths.forEach(filePath => {
         const content = readFileSync(filePath)
         const matterResult = matter(content)
 
-        return {
-            name: path.basename(filePath, '.md'),
-            tags: matterResult.data.tags,
-            // block objectsに変換
-            body: markdownToBlocks(matterResult.content),
+        if (matterResult.data.syncToNotion === true) {
+            notionPages.push({
+                name: matterResult.data.name ?? 'undefined',
+                tags: matterResult.data.tags ?? [],
+                // block objectsに変換
+                body: markdownToBlocks(matterResult.content),
+                origin: new URL('https://github.com/nazonohito51/notion_test/blob/main/' + filePath).toString(),
+            })
         }
     })
+
+    return notionPages
 }
